@@ -1,1 +1,1 @@
-python3 -m wbb
+worker: bash start.sh
