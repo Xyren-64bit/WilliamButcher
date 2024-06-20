@@ -27,7 +27,7 @@ import traceback
 
 from pyrogram import filters
 
-from wbb import BOT_USERNAME, app
+from wbb import BOT_USERNAME, app, USERBOT_PREFIX, app2
 from wbb.utils.inlinefuncs import *
 
 __MODULE__ = "Inline"
@@ -53,8 +53,13 @@ async def inline(_, message):
     await message.reply_text(text=text, reply_markup=buttons)
 
 
-@app.on_inline_query()
-async def inline_query_handler(client, query):
+@app2.on_message(
+    SUDOERS
+    & filters.command("helpp", prefixes=USERBOT_PREFIX)
+    & ~filters.forwarded
+    & ~filters.via_bot
+)
+async def inline_query_handler(_, message: Message):
     try:
         text = query.query.strip().lower()
         answers = []
