@@ -26,6 +26,7 @@ SOFTWARE.
 import traceback
 
 from pyrogram import filters
+from pyrogram.types import Message
 
 from wbb import BOT_USERNAME, app, USERBOT_PREFIX, app2
 from wbb.utils.inlinefuncs import *
