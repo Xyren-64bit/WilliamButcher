@@ -60,7 +60,7 @@ async def inline(_, message):
     & ~filters.forwarded
     & ~filters.via_bot
 )
-async def inline_query_handler(_, message: Message):
+async def inline_query_handler(client, query):
     try:
         text = query.query.strip().lower()
         answers = []
