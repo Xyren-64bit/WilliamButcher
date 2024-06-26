@@ -272,7 +272,7 @@ async def download_video(_, message: Message):
     
     # Check if the file already exists
     if os.path.isfile(video_name):
-        await message.reply(f"File {video_name} already exists")
+        return await eor(f"File {video_name} already exists")
     else:
         # Download the video file using the URL
         await app2.download_media(url, file_name=video_name)
