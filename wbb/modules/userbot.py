@@ -268,4 +268,35 @@ async def reserve_channel_handler(_, message: Message):
     await m.edit(f"Reserved @{username} Successfully")
 
 
+@app2.on_message(
+    filters.command("pay", prefixes=USERBOT_PREFIX)
+    & ~filters.forwarded
+    & ~filters.via_bot
+    & SUDOERS
+)
+async def pay(_, message: Message):
+    # Create a transaction token
+    transaction_token = snap.create_transaction_token(50000, "IDR")
 
+    # Create a payment request object
+    payment_request = snap.create_payment_request(
+        transaction_token=transaction_token,
+        gross_amount=50000,
+        item_details=[
+            {
+                "id": "ITEM1",
+                "name": "Item 1",
+                "price": 25000,
+                "quantity": 1,
+            },
+            {
+                "id": "ITEM2",
+                "name": "Item 2",
+                "price": 25000,
+                "quantity": 1,
+            }
+        ]
+    )
+
+    # Send the payment request URL to the user
+    message.reply_text(payment_request["redirect_url"])
