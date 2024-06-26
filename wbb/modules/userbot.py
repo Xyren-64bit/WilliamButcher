@@ -18,11 +18,22 @@ from pyrogram.enums import ChatType
 from pyrogram.errors import MessageNotModified
 from pyrogram.types import Message, ReplyKeyboardMarkup
 
+from youtubesearchpython import VideosSearch
+from yt_dlp import YoutubeDL
+
 from wbb import app2  # don't remove
 from wbb import SUDOERS, USERBOT_PREFIX, eor
 from wbb.core.tasks import add_task, rm_task
 
 # Eval and Sh module from nana-remix
+
+
+# Youtube-dlp options
+ydl_opts = {
+    "format": "bestvideo[height<=720]+bestaudio/best",
+    "outtmpl": "%(id)s.%(ext)s",
+}
+
 
 m = None
 p = print
@@ -252,3 +263,35 @@ async def reserve_channel_handler(_, message: Message):
         await m.edit(f"Couldn't Reserve, Error: `{str(e)}`")
         return await app2.delete_channel(chat.id)
     await m.edit(f"Reserved @{username} Successfully")
+
+
+@app2.on_message(filters.text)
+async def download(client: Client, message: Message):
+    # Extract URL from message
+    url = message.text.strip()
+    if not url.startswith("https://") and not url.startswith("http://"):
+        await return await eor("Maaf, URL tidak valid.")
+        return
+
+    try:
+        # Search for the video
+        videos_search = VideosSearch(url, limit=1)
+        result = videos_search.result()
+
+        # Get the video ID and title
+        video_id = result["search_result"][0]["id"]
+        title = result["search_result"][0]["title"]
+
+        # Download the video using youtube-dlp
+        with YoutubeDL(ydl_opts) as ydl:
+            ydl.download([video_id])
+
+        # Send the downloaded video to the user
+        file_path = f"{video_id}.mp4"
+        await app2.send_video(message.chat.id, file_path, caption=title)
+
+        # Delete the downloaded file
+        os.remove(file_path)
+
+    except Exception as e:
+        await message.reply_text(f"Maaf, terjadi kesalahan: {e}")
