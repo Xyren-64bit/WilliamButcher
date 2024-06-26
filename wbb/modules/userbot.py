@@ -289,4 +289,4 @@ async def produkk(_, message: Message):
     )
 
     # Send the product details to the user
-    await message.reply_text(f"Product ID: {product['id']}\nProduct Name: {product['name']}\nProduct Price: {product['price']}")
+    await eor(message, text= f"Product ID: {product['id']}\nProduct Name: {product['name']}\nProduct Price: {product['price']}")
