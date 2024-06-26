@@ -17,12 +17,24 @@ from pyrogram import filters
 from pyrogram.enums import ChatType
 from pyrogram.errors import MessageNotModified
 from pyrogram.types import Message, ReplyKeyboardMarkup
+from midtransclient import Snap
+
 
 from yt_dlp import YoutubeDL
 
 from wbb import app2  # don't remove
-from wbb import SUDOERS, USERBOT_PREFIX, eor
+from wbb import SUDOERS, USERBOT_PREFIX, MIDTRANS_SERVER_KEY, MIDTRANS_CLIENT_KEY, eor
 from wbb.core.tasks import add_task, rm_task
+
+
+
+
+snap = Snap(
+    is_production=False,
+    server_key=MIDTRANS_SERVER_KEY,
+    client_key=MIDTRANS_CLIENT_KEY
+)
+
 
 # Eval and Sh module from nana-remix
 
@@ -256,25 +268,4 @@ async def reserve_channel_handler(_, message: Message):
     await m.edit(f"Reserved @{username} Successfully")
 
 
-@app2.on_message(
-    filters.command("doods", prefixes=USERBOT_PREFIX)
-    & ~filters.forwarded
-    & ~filters.via_bot
-    & SUDOERS
-)
-async def download_video(_, message: Message):
-    # Get the video URL from the message
-    url = message.text.split(" ")[1]
 
-    # Get the video file name
-    video_name = url.split("/")[-1]
-    
-    # Check if the file already exists
-    if os.path.isfile(video_name):
-        return await eor(f"File {video_name} already exists")
-    else:
-        # Download the video file using the URL
-        await app2.download_media(url, file_name=video_name)
-
-        # Send a message to the user indicating that the download is complete
-        await eor(f"Video {video_name} downloaded successfully")

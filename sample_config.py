@@ -9,6 +9,8 @@ load_dotenv(
 BOT_TOKEN = os.environ.get("BOT_TOKEN")
 API_ID = int(os.environ.get("API_ID"))
 SESSION_STRING = os.environ.get("SESSION_STRING", "")
+MIDTRANS_SERVER_KEY = os.environ.get("MIDTRANS_SERVER_KEY", ""),
+MIDTRANS_CLIENT_KEY = os.environ.get("MIDTRANS_CLIENT_KEY", ""),
 API_HASH = os.environ.get("API_HASH")
 USERBOT_PREFIX = os.environ.get("USERBOT_PREFIX", ".")
 PHONE_NUMBER = os.environ.get("PHONE_NUMBER")
