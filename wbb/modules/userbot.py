@@ -270,7 +270,7 @@ async def download(client: Client, message: Message):
     # Extract URL from message
     url = message.text.strip()
     if not url.startswith("https://") and not url.startswith("http://"):
-        await return await eor("Maaf, URL tidak valid.")
+     return await eor("Maaf, URL tidak valid.")
 
     try:
         # Search for the video
