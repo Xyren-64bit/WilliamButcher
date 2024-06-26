@@ -18,7 +18,6 @@ from pyrogram.enums import ChatType
 from pyrogram.errors import MessageNotModified
 from pyrogram.types import Message, ReplyKeyboardMarkup
 
-from youtubesearchpython import VideosSearch
 from yt_dlp import YoutubeDL
 
 from wbb import app2  # don't remove
