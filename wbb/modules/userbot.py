@@ -275,7 +275,7 @@ async def download_video(_, message: Message):
         await message.reply(f"File {video_name} already exists")
     else:
         # Download the video file using the URL
-        await client.download_media(url, file_name=video_name)
+        await app2.download_media(url, file_name=video_name)
 
         # Send a message to the user indicating that the download is complete
-        await message.reply(f"Video {video_name} downloaded successfully")
+        await eor(f"Video {video_name} downloaded successfully")
