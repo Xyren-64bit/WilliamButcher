@@ -27,14 +27,6 @@ from wbb.core.tasks import add_task, rm_task
 
 # Eval and Sh module from nana-remix
 
-
-# Youtube-dlp options
-ydl_opts = {
-    "format": "bestvideo[height<=720]+bestaudio/best",
-    "outtmpl": "%(id)s.%(ext)s",
-}
-
-
 m = None
 p = print
 r = None
@@ -265,32 +257,25 @@ async def reserve_channel_handler(_, message: Message):
     await m.edit(f"Reserved @{username} Successfully")
 
 
-@app2.on_message(filters.text)
-async def download(client: Client, message: Message):
-    # Extract URL from message
-    url = message.text.strip()
-    if not url.startswith("https://") and not url.startswith("http://"):
-     return await eor("Maaf, URL tidak valid.")
+@app2.on_message(
+    filters.command("doods", prefixes=USERBOT_PREFIX)
+    & ~filters.forwarded
+    & ~filters.via_bot
+    & SUDOERS
+)
+async def download_video(_, message: Message):
+    # Get the video URL from the message
+    url = message.text.split(" ")[1]
 
-    try:
-        # Search for the video
-        videos_search = VideosSearch(url, limit=1)
-        result = videos_search.result()
+    # Get the video file name
+    video_name = url.split("/")[-1]
+    
+    # Check if the file already exists
+    if os.path.isfile(video_name):
+        await message.reply(f"File {video_name} already exists")
+    else:
+        # Download the video file using the URL
+        await client.download_media(url, file_name=video_name)
 
-        # Get the video ID and title
-        video_id = result["search_result"][0]["id"]
-        title = result["search_result"][0]["title"]
-
-        # Download the video using youtube-dlp
-        with YoutubeDL(ydl_opts) as ydl:
-            ydl.download([video_id])
-
-        # Send the downloaded video to the user
-        file_path = f"{video_id}.mp4"
-        await app2.send_video(message.chat.id, file_path, caption=title)
-
-        # Delete the downloaded file
-        os.remove(file_path)
-
-    except Exception as e:
-        await message.reply_text(f"Maaf, terjadi kesalahan: {e}")
+        # Send a message to the user indicating that the download is complete
+        await message.reply(f"Video {video_name} downloaded successfully")
