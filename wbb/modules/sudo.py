@@ -133,7 +133,7 @@ async def sudoers_list(_, message: Message):
     await eor(message, text=text)
 
 
-@app.on_message(pyrogram.filters.command("buat"))
+@app.on_message(filters.command("buat"))
 async def buat_link(client, message):
     # Memeriksa apakah pesan berisi argumen URL
     if not message.command[1]:
