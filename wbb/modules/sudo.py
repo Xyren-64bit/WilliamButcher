@@ -131,3 +131,45 @@ async def sudoers_list(_, message: Message):
     if text == "":
         return await eor(message, text="No sudoers found.")
     await eor(message, text=text)
+
+
+@app.on_message(pyrogram.filters.command("buat"))
+async def buat_link(client, message):
+    # Memeriksa apakah pesan berisi argumen URL
+    if not message.command[1]:
+        message.reply_text("Maaf, Anda harus memberikan URL tujuan.")
+        return
+
+    # Mengambil URL tujuan dari argumen
+    tujuan_url = message.command[1]
+
+    # Memeriksa apakah URL tujuan valid
+    if not tujuan_url.startswith("http") and not tujuan_url.startswith("https"):
+        message.reply_text("URL tujuan tidak valid. Harap gunakan format http:// atau https://")
+        return
+
+    # Memeriksa apakah URL alias diberikan (opsional)
+    alias = ""
+    if len(message.command) > 2:
+        alias = message.command[2]
+
+    # Membuat permintaan ke API Paid4Link
+    url = f"https://paid4link.com/api?api=a41626ab3b69ac09484fa20a1868d46892e6d8d8&url={tujuan_url}&alias={alias}"
+    response = requests.get(url)
+
+    # Memeriksa apakah permintaan berhasil
+    if response.status_code != 200:
+        message.reply_text("Maaf, ada masalah saat membuat tautan. Coba lagi nanti.")
+        return
+
+    # Mengurai respons JSON
+    data = response.json()
+
+    # Memeriksa apakah tautan berhasil dibuat
+    if data["success"] != True:
+        message.reply_text(f"Maaf, ada masalah saat membuat tautan: {data['error']}")
+        return
+
+    # Mengembalikan tautan PAID4LINK yang dibuat
+    paid4link_url = data["shortenedUrl"]
+    message.reply_text(f"Tautan PAID4LINK Anda:\n{paid4link_url}")
