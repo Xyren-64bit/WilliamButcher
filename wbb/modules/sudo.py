@@ -160,7 +160,7 @@ async def buat_link(client, message):
 
     # Memeriksa apakah permintaan berhasil
     if response.status_code != 200:
-        message.reply_text("Maaf, ada masalah saat membuat tautan. Coba lagi nanti.")
+        await message.reply_text("Maaf, ada masalah saat membuat tautan. Coba lagi nanti.")
         return
 
     # Mengurai respons JSON
@@ -168,9 +168,9 @@ async def buat_link(client, message):
 
     # Memeriksa apakah tautan berhasil dibuat
     if data["success"] != True:
-        message.reply_text(f"Maaf, ada masalah saat membuat tautan: {data['error']}")
+        await message.reply_text(f"Maaf, ada masalah saat membuat tautan: {data['error']}")
         return
 
     # Mengembalikan tautan PAID4LINK yang dibuat
     paid4link_url = data["shortenedUrl"]
-    message.reply_text(f"Tautan PAID4LINK Anda:\n{paid4link_url}")
+    await message.reply_text(f"Tautan PAID4LINK Anda:\n{paid4link_url}")
